@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	// "github.com/golang-jwt/jwt"
 	"github.com/google/go-querystring/query"
 	"github.com/pkg/errors"
 )
