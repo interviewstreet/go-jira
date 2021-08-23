@@ -526,7 +526,7 @@ func (t *JWTAuthTransport) RoundTrip(req *http.Request) (*http.Response, error) 
 
 
 	fmt.Println(t.Jwt, " this is JWT from library RoundTrip method")
-	req2.Header.Set("Authorization", fmt.Sprintf("JWT %s", t.Jwt))
+	req2.Header.Set("Authorization", fmt.Sprintf("Bearer %s", t.Jwt))
 	return t.transport().RoundTrip(req2)
 }
 
