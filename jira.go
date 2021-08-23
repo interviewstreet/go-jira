@@ -488,8 +488,8 @@ func (t *CookieAuthTransport) transport() http.RoundTripper {
 //    https://bitbucket.org/atlassian/atlassian-jwt-ruby/src/d44a8e7a4649e4f23edaa784402655fda7c816ea/lib/atlassian/jwt.rb
 //    https://bitbucket.org/atlassian/atlassian-jwt-py/src/master/atlassian_jwt/url_utils.py
 type JWTAuthTransport struct {
-	Secret []byte
-	Issuer string
+	Jwt string
+	Username string
 
 	// Transport is the underlying HTTP transport to use when making requests.
 	// It will default to http.DefaultTransport if nil.
@@ -510,21 +510,21 @@ func (t *JWTAuthTransport) transport() http.RoundTripper {
 // RoundTrip adds the session object to the request.
 func (t *JWTAuthTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	req2 := cloneRequest(req) // per RoundTripper contract
-	exp := time.Duration(59) * time.Second
-	qsh := t.createQueryStringHash(req.Method, req2.URL)
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"iss": t.Issuer,
-		"iat": time.Now().Unix(),
-		"exp": time.Now().Add(exp).Unix(),
-		"qsh": qsh,
-	})
+	// exp := time.Duration(59) * time.Second
+	// qsh := t.createQueryStringHash(req.Method, req2.URL)
+	// token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	// 	"iss": t.Issuer,
+	// 	"iat": time.Now().Unix(),
+	// 	"exp": time.Now().Add(exp).Unix(),
+	// 	"qsh": qsh,
+	// })
 
-	jwtStr, err := token.SignedString(t.Secret)
-	if err != nil {
-		return nil, errors.Wrap(err, "jwtAuth: error signing JWT")
-	}
+	// jwtStr, err := token.SignedString(t.Secret)
+	// if err != nil {
+	// 	return nil, errors.Wrap(err, "jwtAuth: error signing JWT")
+	// }
 
-	req2.Header.Set("Authorization", fmt.Sprintf("JWT %s", jwtStr))
+	req2.Header.Set("Authorization", fmt.Sprintf("JWT %s", t.Jwt))
 	return t.transport().RoundTrip(req2)
 }
 
