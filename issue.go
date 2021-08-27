@@ -1059,7 +1059,7 @@ func (s *IssueService) AddLink(issueLink *IssueLink) (*Response, error) {
 // SearchWithContext will search for tickets according to the jql
 //
 // Jira API docs: https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-api-tutorials/jira-rest-api-example-query-issues
-func (s *IssueService) SearchWithContext(ctx context.Context, jql string, options *SearchOptions) ([]Issue, *Response, error) {
+func (s *IssueService) SearchWithContext(ctx context.Context, jql string, options *SearchOptions) ([]Issue, map[string]string, *Response, error) {
 	u := url.URL{
 		Path: "rest/api/2/search",
 	}
@@ -1098,11 +1098,11 @@ func (s *IssueService) SearchWithContext(ctx context.Context, jql string, option
 	if err != nil {
 		err = NewJiraError(resp, err)
 	}
-	return v.Issues, resp, err
+	return v.Issues, v.Names, resp, err
 }
 
 // Search wraps SearchWithContext using the background context.
-func (s *IssueService) Search(jql string, options *SearchOptions) ([]Issue, *Response, error) {
+func (s *IssueService) Search(jql string, options *SearchOptions) ([]Issue, map[string]string, *Response, error) {
 	return s.SearchWithContext(context.Background(), jql, options)
 }
 
