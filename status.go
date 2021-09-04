@@ -45,3 +45,21 @@ func (s *StatusService) GetAllStatusesWithContext(ctx context.Context) ([]Status
 func (s *StatusService) GetAllStatuses() ([]Status, *Response, error) {
 	return s.GetAllStatusesWithContext(context.Background())
 }
+
+func (s *StatusService) Get(id string) (*Status, *Response, error) {
+	apiEndpoint := "rest/api/2/status/" + id
+	req, err := s.client.NewRequestWithContext(context.Background(), "GET", apiEndpoint, nil)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var status Status
+
+	resp, err := s.client.Do(req, &status)
+	if err != nil {
+		return nil, resp, NewJiraError(resp, err)
+	}
+
+	return &status, resp, nil
+}
