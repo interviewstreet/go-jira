@@ -1,4 +1,4 @@
-module github.com/chhekur/go-jira
+module github.com/bluevare/go-jira
 
 go 1.12
 

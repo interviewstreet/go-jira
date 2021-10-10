@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	jira "github.com/chhekur/go-jira"
+	jira "github.com/bluevare/go-jira"
 )
 
 func main() {
