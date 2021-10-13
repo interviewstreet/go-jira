@@ -468,6 +468,19 @@ type Comment struct {
 	Visibility   CommentVisibility `json:"visibility,omitempty" structs:"visibility,omitempty"`
 }
 
+// Updated struct for new v3 jira api's
+type Commentv3 struct {
+	ID           string            `json:"id,omitempty" structs:"id,omitempty"`
+	Self         string            `json:"self,omitempty" structs:"self,omitempty"`
+	Name         string            `json:"name,omitempty" structs:"name,omitempty"`
+	Author       User              `json:"author,omitempty" structs:"author,omitempty"`
+	Body         interface{}       `json:"body,omitempty" structs:"body,omitempty"`
+	UpdateAuthor User              `json:"updateAuthor,omitempty" structs:"updateAuthor,omitempty"`
+	Updated      string            `json:"updated,omitempty" structs:"updated,omitempty"`
+	Created      string            `json:"created,omitempty" structs:"created,omitempty"`
+	Visibility   CommentVisibility `json:"visibility,omitempty" structs:"visibility,omitempty"`
+}
+
 // FixVersion represents a software release in which an issue is fixed.
 type FixVersion struct {
 	Self            string `json:"self,omitempty" structs:"self,omitempty"`
@@ -889,6 +902,33 @@ func (s *IssueService) UpdateIssueWithContext(ctx context.Context, jiraID string
 // UpdateIssue wraps UpdateIssueWithContext using the background context.
 func (s *IssueService) UpdateIssue(jiraID string, data map[string]interface{}) (*Response, error) {
 	return s.UpdateIssueWithContext(context.Background(), jiraID, data)
+}
+
+// AddCommentWithContext adds a new comment to issueID
+//
+// https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-comments/#api-rest-api-3-comment-list-post
+//
+// Version 3
+func (s *IssueService) AddCommentWithContextv3(ctx context.Context, issueID string, comment *Commentv3) (*Commentv3, *Response, error) {
+	apiEndpoint := fmt.Sprintf("rest/api/3/issue/%s/comment", issueID)
+	req, err := s.client.NewRequestWithContext(ctx, "POST", apiEndpoint, comment)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	responseComment := new(Commentv3)
+	resp, err := s.client.Do(req, responseComment)
+	if err != nil {
+		jerr := NewJiraError(resp, err)
+		return nil, resp, jerr
+	}
+
+	return responseComment, resp, nil
+}
+
+// AddComment wraps AddCommentWithContext using the background context.
+func (s *IssueService) AddCommentv3(issueID string, comment *Commentv3) (*Commentv3, *Response, error) {
+	return s.AddCommentWithContextv3(context.Background(), issueID, comment)
 }
 
 // AddCommentWithContext adds a new comment to issueID.
