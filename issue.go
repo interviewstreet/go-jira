@@ -956,6 +956,32 @@ func (s *IssueService) AddComment(issueID string, comment *Comment) (*Comment, *
 	return s.AddCommentWithContext(context.Background(), issueID, comment)
 }
 
+func (s *IssueService) UpdateCommentWithContextv3(ctx context.Context, issueID string, comment *Commentv3) (*Commentv3, *Response, error) {
+	reqBody := struct {
+		Body interface{} `json:"body"`
+	}{
+		Body: comment.Body,
+	}
+	apiEndpoint := fmt.Sprintf("rest/api/3/issue/%s/comment/%s", issueID, comment.ID)
+	req, err := s.client.NewRequestWithContext(ctx, "PUT", apiEndpoint, reqBody)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	responseComment := new(Commentv3)
+	resp, err := s.client.Do(req, responseComment)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return responseComment, resp, nil
+}
+
+// UpdateComment wraps UpdateCommentWithContext using the background context.
+func (s *IssueService) UpdateCommentv3(issueID string, comment *Commentv3) (*Commentv3, *Response, error) {
+	return s.UpdateCommentWithContextv3(context.Background(), issueID, comment)
+}
+
 // UpdateCommentWithContext updates the body of a comment, identified by comment.ID, on the issueID.
 //
 // Jira API docs: https://docs.atlassian.com/jira/REST/cloud/#api/2/issue/{issueIdOrKey}/comment-updateComment
