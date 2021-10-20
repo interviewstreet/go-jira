@@ -462,6 +462,7 @@ type Comment struct {
 	Name         string            `json:"name,omitempty" structs:"name,omitempty"`
 	Author       User              `json:"author,omitempty" structs:"author,omitempty"`
 	Body         string            `json:"body,omitempty" structs:"body,omitempty"`
+	RenderedBody string 					 `json:"renderedBody,omitempty" structs:"body,omitempty"`
 	UpdateAuthor User              `json:"updateAuthor,omitempty" structs:"updateAuthor,omitempty"`
 	Updated      string            `json:"updated,omitempty" structs:"updated,omitempty"`
 	Created      string            `json:"created,omitempty" structs:"created,omitempty"`
@@ -902,6 +903,31 @@ func (s *IssueService) UpdateIssueWithContext(ctx context.Context, jiraID string
 // UpdateIssue wraps UpdateIssueWithContext using the background context.
 func (s *IssueService) UpdateIssue(jiraID string, data map[string]interface{}) (*Response, error) {
 	return s.UpdateIssueWithContext(context.Background(), jiraID, data)
+}
+
+func (s *IssueService) GetComment(ctx context.Context, issueID string, commentID string, options *GetQueryOptions) (*Comment, *Response, error) {
+	apiEndpoint := fmt.Sprintf("rest/api/2/issue/%s/comment/%s", issueID, commentID)
+	req, err := s.client.NewRequestWithContext(ctx, "GET", apiEndpoint, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if options != nil {
+		q, err := query.Values(options)
+		if err != nil {
+			return nil, nil
+		}
+		req.URL.RawQuery = q.Encode()
+	}
+
+	comment := new(Comment)
+	resp, err := s.client.Do(req, comment)
+	if err != nil {
+		jerr := NewJiraError(resp, err)
+		return nil, resp, jerr
+	}
+
+	return issue, resp, nil
 }
 
 // AddCommentWithContext adds a new comment to issueID
