@@ -915,7 +915,7 @@ func (s *IssueService) GetComment(ctx context.Context, issueID string, commentID
 	if options != nil {
 		q, err := query.Values(options)
 		if err != nil {
-			return nil, nil
+			return nil, nil, nil
 		}
 		req.URL.RawQuery = q.Encode()
 	}
