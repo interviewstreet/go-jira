@@ -927,7 +927,7 @@ func (s *IssueService) GetComment(ctx context.Context, issueID string, commentID
 		return nil, resp, jerr
 	}
 
-	return issue, resp, nil
+	return comment, resp, nil
 }
 
 // AddCommentWithContext adds a new comment to issueID
