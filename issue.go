@@ -462,7 +462,7 @@ type Comment struct {
 	Name         string            `json:"name,omitempty" structs:"name,omitempty"`
 	Author       User              `json:"author,omitempty" structs:"author,omitempty"`
 	Body         string            `json:"body,omitempty" structs:"body,omitempty"`
-	RenderedBody string 					 `json:"renderedBody,omitempty" structs:"body,omitempty"`
+	RenderedBody string            `json:"renderedBody,omitempty" structs:"body,omitempty"`
 	UpdateAuthor User              `json:"updateAuthor,omitempty" structs:"updateAuthor,omitempty"`
 	Updated      string            `json:"updated,omitempty" structs:"updated,omitempty"`
 	Created      string            `json:"created,omitempty" structs:"created,omitempty"`
@@ -1196,6 +1196,50 @@ func (s *IssueService) SearchWithContext(ctx context.Context, jql string, option
 // Search wraps SearchWithContext using the background context.
 func (s *IssueService) Search(jql string, options *SearchOptions) ([]Issue, map[string]string, *Response, error) {
 	return s.SearchWithContext(context.Background(), jql, options)
+}
+
+// Search wraps SearchWithContext using the background context.
+func (s *IssueService) SearchBoard(boardId int, options *SearchOptions) ([]Issue, map[string]string, *Response, error) {
+	return s.SearchBoardWithContext(context.Background(), boardId, options)
+}
+
+func (s *IssueService) SearchBoardWithContext(ctx context.Context, boardId int, options *SearchOptions) ([]Issue, map[string]string, *Response, error) {
+	u := url.URL{
+		Path: fmt.Sprintf("rest/agile/1.0/board/%d/issue", boardId),
+	}
+	uv := url.Values{}
+
+	if options != nil {
+		if options.StartAt != 0 {
+			uv.Add("startAt", strconv.Itoa(options.StartAt))
+		}
+		if options.MaxResults != 0 {
+			uv.Add("maxResults", strconv.Itoa(options.MaxResults))
+		}
+		if options.Expand != "" {
+			uv.Add("expand", options.Expand)
+		}
+		if strings.Join(options.Fields, ",") != "" {
+			uv.Add("fields", strings.Join(options.Fields, ","))
+		}
+		if options.ValidateQuery != "" {
+			uv.Add("validateQuery", options.ValidateQuery)
+		}
+	}
+
+	u.RawQuery = uv.Encode()
+
+	req, err := s.client.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	if err != nil {
+		return []Issue{}, map[string]string{}, nil, err
+	}
+
+	v := new(searchResult)
+	resp, err := s.client.Do(req, v)
+	if err != nil {
+		err = NewJiraError(resp, err)
+	}
+	return v.Issues, v.Names, resp, err
 }
 
 // SearchPagesWithContext will get issues from all pages in a search
