@@ -3,6 +3,9 @@ package jira
 import (
 	"context"
 	"fmt"
+	"net/url"
+	"strconv"
+	"strings"
 
 	"github.com/google/go-querystring/query"
 )
@@ -25,6 +28,17 @@ type ProjectList []struct {
 	ProjectTypeKey  string          `json:"projectTypeKey" structs:"projectTypeKey"`
 	ProjectCategory ProjectCategory `json:"projectCategory,omitempty" structs:"projectsCategory,omitempty"`
 	IssueTypes      []IssueType     `json:"issueTypes,omitempty" structs:"issueTypes,omitempty"`
+}
+
+type ProjectSearchResult struct {
+	Projects ProjectList `json:"values,omitempty"`
+	IsLast bool `json:"isLast, omitempty"`
+	Self            string          `json:"self" structs:"self"`
+	NextPage            string          `json:"nextPage" structs:"nextPage"`
+	MaxResults int `json:"maxResults,omitempty"`
+	StartAt int `json:"startAt,omitempty"`
+	Total      int               `json:"total" structs:"total"`
+
 }
 
 // ProjectCategory represents a single project category
@@ -91,6 +105,46 @@ func (s *ProjectService) GetListWithContext(ctx context.Context) (*ProjectList, 
 // GetList wraps GetListWithContext using the background context.
 func (s *ProjectService) GetList() (*ProjectList, *Response, error) {
 	return s.GetListWithContext(context.Background())
+}
+
+func (s *ProjectService) Search(options *SearchOptions) (ProjectSearchResult, *Response, error) {
+	return s.SearchWithContext(context.Background(), options)
+}
+
+func (s *ProjectService) SearchWithContext(ctx context.Context, options *SearchOptions) (ProjectSearchResult, *Response, error) {
+	u := url.URL{
+		Path: "rest/api/2/project/search",
+	}
+	uv := url.Values{}
+
+	if options != nil {
+		if options.StartAt != 0 {
+			uv.Add("startAt", strconv.Itoa(options.StartAt))
+		}
+		if options.MaxResults != 0 {
+			uv.Add("maxResults", strconv.Itoa(options.MaxResults))
+		}
+		if options.Expand != "" {
+			uv.Add("expand", options.Expand)
+		}
+		if strings.Join(options.Fields, ",") != "" {
+			uv.Add("fields", strings.Join(options.Fields, ","))
+		}
+	}
+
+	u.RawQuery = uv.Encode()
+
+	req, err := s.client.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	if err != nil {
+		return ProjectSearchResult{}, nil, err
+	}
+
+	v := new(ProjectSearchResult)
+	resp, err := s.client.Do(req, v)
+	if err != nil {
+		err = NewJiraError(resp, err)
+	}
+	return *v, resp, err
 }
 
 // ListWithOptionsWithContext gets all projects form Jira with optional query params, like &GetQueryOptions{Expand: "issueTypes"} to get
