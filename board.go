@@ -30,6 +30,17 @@ type Board struct {
 	Name     string `json:"name,omitempty" structs:"name,omitemtpy"`
 	Type     string `json:"type,omitempty" structs:"type,omitempty"`
 	FilterID int    `json:"filterId,omitempty" structs:"filterId,omitempty"`
+	Location *BoardLocation `json:"location,omitempty" structs:"location,omitempty"`
+}
+
+type BoardLocation struct {
+	ProjectID int `json:"projectId,omitempty" structs:"projectId,omitempty"`
+	DisplayName string `json:"displayName,omitempty" structs:"displayName,omitempty"`
+	ProjectName string `json:"projectName,omitempty" structs:"projectName,omitempty"`
+	ProjectKey string `json:"projectKey,omitempty" structs:"projectKey,omitempty"`
+	ProjectTypeKey string `json:"projectTypeKey,omitempty" structs:"projectTypeKey,omitempty"`
+	AvatarURL string `json:"avatarURI,omitempty" structs:"avatarURI,omitempty"`
+	Name string `json:"name,omitempty" structs:"name,omitemtpy"`
 }
 
 // BoardListOptions specifies the optional parameters to the BoardService.GetList
