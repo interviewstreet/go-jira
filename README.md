@@ -1,8 +1,8 @@
 # go-jira
 
-[![GoDoc](https://godoc.org/github.com/bluevare/go-jira?status.svg)](https://godoc.org/github.com/bluevare/go-jira)
-[![Build Status](https://github.com/bluevare/go-jira/actions/workflows/testing.yml/badge.svg)](https://github.com/bluevare/go-jira/actions/workflows/testing.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/bluevare/go-jira)](https://goreportcard.com/report/github.com/bluevare/go-jira)
+[![GoDoc](https://godoc.org/github.com/interviewstreet/go-jira?status.svg)](https://godoc.org/github.com/interviewstreet/go-jira)
+[![Build Status](https://github.com/interviewstreet/go-jira/actions/workflows/testing.yml/badge.svg)](https://github.com/interviewstreet/go-jira/actions/workflows/testing.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/interviewstreet/go-jira)](https://goreportcard.com/report/github.com/interviewstreet/go-jira)
 
 [Go](https://golang.org/) client library for [Atlassian Jira](https://www.atlassian.com/software/jira).
 
@@ -30,7 +30,7 @@ of Go are officially supported.
 It is go gettable
 
 ```bash
-go get github.com/bluevare/go-jira
+go get github.com/interviewstreet/go-jira
 ```
 
 For stable versions you can use one of our tags with [gopkg.in](http://labix.org/gopkg.in). E.g.
@@ -39,7 +39,7 @@ For stable versions you can use one of our tags with [gopkg.in](http://labix.org
 package main
 
 import (
-	jira "gopkg.in/bluevare/go-jira.v1"
+	jira "gopkg.in/interviewstreet/go-jira.v1"
 )
 ...
 ```
@@ -47,20 +47,20 @@ import (
 (optional) to run unit / example tests:
 
 ```bash
-cd $GOPATH/src/github.com/bluevare/go-jira
+cd $GOPATH/src/github.com/interviewstreet/go-jira
 go test -v ./...
 ```
 
 ## API
 
-Please have a look at the [GoDoc documentation](https://godoc.org/github.com/bluevare/go-jira) for a detailed API description.
+Please have a look at the [GoDoc documentation](https://godoc.org/github.com/interviewstreet/go-jira) for a detailed API description.
 
 The [latest Jira REST API documentation](https://docs.atlassian.com/jira/REST/latest/) was the base document for this package.
 
 ## Examples
 
 Further a few examples how the API can be used.
-A few more examples are available in the [GoDoc examples section](https://godoc.org/github.com/bluevare/go-jira#pkg-examples).
+A few more examples are available in the [GoDoc examples section](https://godoc.org/github.com/interviewstreet/go-jira#pkg-examples).
 
 ### Get a single issue
 
@@ -71,7 +71,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/bluevare/go-jira"
+	"github.com/interviewstreet/go-jira"
 )
 
 func main() {
@@ -126,7 +126,7 @@ The above token authentication example may be used, substituting a user's passwo
 
 If you want to connect via OAuth to your Jira Cloud instance checkout the [example of using OAuth authentication with Jira in Go](https://gist.github.com/Lupus/edafe9a7c5c6b13407293d795442fe67) by [@Lupus](https://github.com/Lupus).
 
-For more details have a look at the [issue #56](https://github.com/bluevare/go-jira/issues/56).
+For more details have a look at the [issue #56](https://github.com/interviewstreet/go-jira/issues/56).
 
 ### Create an issue
 
@@ -137,7 +137,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/bluevare/go-jira"
+	"github.com/interviewstreet/go-jira"
 )
 
 func main() {
@@ -188,7 +188,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/bluevare/go-jira"
+	"github.com/interviewstreet/go-jira"
 )
 
 func main() {
@@ -225,7 +225,7 @@ func main() {
 Jira API has limit on maxResults it can return. You may have a usecase where you need to get all issues for given JQL.
 This example shows reference implementation of GetAllIssues function which does pagination on Jira API to get all the issues for given JQL
 
-please look at [Pagination Example](https://github.com/bluevare/go-jira/blob/master/examples/pagination/main.go)
+please look at [Pagination Example](https://github.com/interviewstreet/go-jira/blob/master/examples/pagination/main.go)
 
 
 
@@ -241,7 +241,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/bluevare/go-jira"
+	"github.com/interviewstreet/go-jira"
 )
 
 func main() {
@@ -275,7 +275,7 @@ func main() {
 
 ## Implementations
 
-* [bluevare/jitic](https://github.com/bluevare/jitic) - The Jira Ticket Checker
+* [interviewstreet/jitic](https://github.com/interviewstreet/jitic) - The Jira Ticket Checker
 
 ## Code structure
 
@@ -291,13 +291,13 @@ We ❤️ PR's
 
 Contribution, in any kind of way, is highly welcome!
 It doesn't matter if you are not able to write code.
-Creating issues or holding talks and help other people to use [go-jira](https://github.com/bluevare/go-jira) is contribution, too!
+Creating issues or holding talks and help other people to use [go-jira](https://github.com/interviewstreet/go-jira) is contribution, too!
 A few examples:
 
 * Correct typos in the README / documentation
 * Reporting bugs
 * Implement a new feature or endpoint
-* Sharing the love of [go-jira](https://github.com/bluevare/go-jira) and help people to get use to it
+* Sharing the love of [go-jira](https://github.com/interviewstreet/go-jira) and help people to get use to it
 
 If you are new to pull requests, checkout [Collaborating on projects using issues and pull requests / Creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
@@ -327,7 +327,7 @@ git push --tags
 
 Manually copy/paste text from changelog (for this new version) into the release on Github.com. E.g.
 
-[https://github.com/bluevare/go-jira/releases/edit/v1.11.0](https://github.com/bluevare/go-jira/releases/edit/v1.11.0)
+[https://github.com/interviewstreet/go-jira/releases/edit/v1.11.0](https://github.com/interviewstreet/go-jira/releases/edit/v1.11.0)
 
 ## License
 

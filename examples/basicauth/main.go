@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 
-	jira "github.com/bluevare/go-jira"
+	jira "github.com/interviewstreet/go-jira"
 )
 
 func main() {

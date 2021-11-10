@@ -1,4 +1,4 @@
-module github.com/bluevare/go-jira
+module github.com/interviewstreet/go-jira
 
 go 1.12
 

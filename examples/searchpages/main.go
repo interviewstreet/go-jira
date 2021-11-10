@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	jira "github.com/bluevare/go-jira"
+	jira "github.com/interviewstreet/go-jira"
 	"golang.org/x/term"
 	"log"
 	"os"
