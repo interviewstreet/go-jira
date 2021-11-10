@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	jira "github.com/bluevare/go-jira"
+	jira "github.com/interviewstreet/go-jira"
 )
 
 // GetAllIssues will implement pagination of api and get all the issues.
