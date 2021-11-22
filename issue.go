@@ -606,6 +606,20 @@ type RemoteLinkStatus struct {
 	Icon     *RemoteLinkIcon `json:"icon,omitempty" structs:"icon,omitempty"`
 }
 
+
+// type for rank api
+type RankBeforeReqBody struct {
+	Issues []string `json:"issues"`
+	RankBeforeIssue string `json:"rankBeforeIssue"`
+	RankCustomFieldId int64 `json:"rankCustomFieldId"`
+}
+
+type RankAfterReqBody struct {
+	Issues []string `json:"issues"`
+	RankAfterIssue string `json:"rankAfterIssue"`
+	RankCustomFieldId int64 `json:"rankCustomFieldId"`
+}
+
 // GetWithContext returns a full representation of the issue for the given issue key.
 // Jira will attempt to identify the issue by the issueIdOrKey path parameter.
 // This can be an issue id, or an issue key.
@@ -780,6 +794,39 @@ func (s *IssueService) GetWorklogsWithContext(ctx context.Context, issueID strin
 	v := new(Worklog)
 	resp, err := s.client.Do(req, v)
 	return v, resp, err
+}
+
+// Rank rank's given issue
+func (s * IssueService) Rank(issueIDs []string, beforeIssue, afterIssue string, customFieldId int64) error {
+	apiEndpoint := "/rest/agile/1.0/issue/rank"
+	var reqBody interface{}
+
+	if len(beforeIssue) > 0 {
+		reqBody = &RankBeforeReqBody {
+			Issues: issueIDs,
+			RankBeforeIssue: beforeIssue,
+			RankCustomFieldId: customFieldId,
+		}
+	} else {
+		reqBody = &RankAfterReqBody {
+			Issues: issueIDs,
+			RankAfterIssue: beforeIssue,
+			RankCustomFieldId: customFieldId,
+		}
+	}
+
+	req, err := s.client.NewRequestWithContext(context.Background(), "PUT", apiEndpoint, reqBody)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(req, nil)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetWorklogs wraps GetWorklogsWithContext using the background context.
