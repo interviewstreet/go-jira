@@ -810,7 +810,7 @@ func (s * IssueService) Rank(issueIDs []string, beforeIssue, afterIssue string, 
 	} else {
 		reqBody = &RankAfterReqBody {
 			Issues: issueIDs,
-			RankAfterIssue: beforeIssue,
+			RankAfterIssue: afterIssue,
 			RankCustomFieldId: customFieldId,
 		}
 	}
