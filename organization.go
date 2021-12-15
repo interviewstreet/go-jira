@@ -55,6 +55,16 @@ type PropertyKeys struct {
 	Keys []PropertyKey `json:"keys,omitempty" structs:"keys,omitempty"`
 }
 
+type Webhook struct {
+	Name                string   `json:"name,omitempty" structs:"name,omitempty"`
+	WebhookUrl          string   `json:"url,omitempty" structs:"url,omitempty"`
+	SelfUrl             string   `json:"self,omitempty" structs:"self,omitempty"`
+	Events              []string `json:"events,omitempty" structs:"events,omitempty"`
+	Enabled             bool     `json:"enabled" structs:"enabled"`
+	LastUpdatedUserName string   `json:"lastUpdatedDisplayName,omitempty" structs:"lastUpdatedDisplayName,omitempty"`
+	LastUpdatedUserId   string   `json:"lastUpdatedUser,omitempty" structs:"lastUpdatedUser,omitempty"`
+}
+
 // GetAllOrganizationsWithContext returns a list of organizations in
 // the Jira Service Management instance.
 // Use this method when you want to present a list
@@ -384,4 +394,25 @@ func (s *OrganizationService) RemoveUsersWithContext(ctx context.Context, organi
 // RemoveUsers wraps RemoveUsersWithContext using the background context.
 func (s *OrganizationService) RemoveUsers(organizationID int, users OrganizationUsersDTO) (*Response, error) {
 	return s.RemoveUsersWithContext(context.Background(), organizationID, users)
+}
+
+func (s *OrganizationService) GetWebhookList(ctx context.Context) ([]*Webhook, *Response, error) {
+	apiEndPoint := "rest/webhooks/1.0/webhook"
+
+	req, err := s.client.NewRequestWithContext(ctx, "GET", apiEndPoint, nil)
+	req.Header.Set("Accept", "application/json")
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	webhooks := []*Webhook{}
+
+	resp, err := s.client.Do(req, &webhooks)
+	if err != nil {
+		jerr := NewJiraError(resp, err)
+		return nil, resp, jerr
+	}
+
+	return webhooks, resp, nil
 }
