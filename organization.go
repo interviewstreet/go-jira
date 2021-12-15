@@ -400,11 +400,12 @@ func (s *OrganizationService) GetWebhookList(ctx context.Context) ([]*Webhook, *
 	apiEndPoint := "rest/webhooks/1.0/webhook"
 
 	req, err := s.client.NewRequestWithContext(ctx, "GET", apiEndPoint, nil)
-	req.Header.Set("Accept", "application/json")
 
 	if err != nil {
 		return nil, nil, err
 	}
+
+	req.Header.Set("Accept", "application/json")
 
 	webhooks := []*Webhook{}
 
